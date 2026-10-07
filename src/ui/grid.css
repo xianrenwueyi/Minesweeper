@@ -1,0 +1,122 @@
+/*
+ * 棋盘与格子的视觉编码（FR-03 视觉编码表的唯一样式实现）
+ *
+ * 从 style.css 拆分而来，以满足 NFR-07（单文件 ≤ 250 行）。
+ * 依赖 style.css 中 :root 定义的 CSS 自定义属性。
+ *
+ * 设计约定：
+ *   - 未翻开格 = 凸起（左上亮边、右下暗边）
+ *   - 已翻开格 = 凹陷（边框反转 + 深色底）
+ *   - 数字颜色按 FR-03 表格固定，且数字始终以文本呈现（NFR-10）
+ *   - 标记与错误标记分层：.cell__mark 承载 🚩/💣，.cell.is-wrong 用 ::before 叠加 ×
+ */
+
+.board-scroll {
+  max-width: min(92vw, 1080px);
+  overflow: auto;
+}
+
+.board-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 9), var(--cell-size));
+  grid-template-rows: repeat(var(--rows, 9), var(--cell-size));
+  gap: 0;
+  padding: 3px;
+  border: 3px solid;
+  border-color: var(--panel-dark) var(--panel-light) var(--panel-light) var(--panel-dark);
+}
+
+.cell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--cell-size);
+  height: var(--cell-size);
+  padding: 0;
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1;
+  background: var(--cell);
+  border: 3px solid;
+  border-color: var(--border-light) var(--border-dark) var(--border-dark) var(--border-light);
+  cursor: pointer;
+  /* FR-22 / NFR-14：允许平移滚动，但抑制双击缩放与系统长按菜单，避免与「长按标旗」冲突 */
+  touch-action: manipulation;
+}
+
+/* 未翻开：凸起，悬停时轻微提亮 */
+.cell.is-hidden:hover {
+  background: #c9c9c9;
+}
+
+/* 已翻开：凹陷 + 深色底 */
+.cell.is-revealed {
+  background: var(--cell-open);
+  border: 1px solid var(--border-dark);
+  cursor: default;
+}
+
+.cell.is-number {
+  color: #212121;
+}
+
+.cell.is-adjacent-1 { color: var(--num-1); }
+.cell.is-adjacent-2 { color: var(--num-2); }
+.cell.is-adjacent-3 { color: var(--num-3); }
+.cell.is-adjacent-4 { color: var(--num-4); }
+.cell.is-adjacent-5 { color: var(--num-5); }
+.cell.is-adjacent-6 { color: var(--num-6); }
+.cell.is-adjacent-7 { color: var(--num-7); }
+.cell.is-adjacent-8 { color: var(--num-8); }
+
+.cell.is-mine {
+  background: #e3c3c3;
+  font-size: 16px;
+}
+
+/* 踩中的那一格：唯一红色高亮（FR-12 / ADR-16） */
+.cell.is-exploded {
+  background: var(--danger);
+  border-color: #ffb3b3 #7a1414 #7a1414 #ffb3b3;
+}
+
+.cell__mark {
+  position: relative;
+  z-index: 1;
+}
+
+/* 错误标记：在 🚩 之上叠加 ×（ADR-11），用高对比小圆底保证可读 */
+.cell.is-wrong::before {
+  content: '×';
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+  background: var(--num-3);
+  border: 1px solid #fff;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* 高对比度偏好：强化数字与边界的可区分性（NFR-10） */
+@media (prefers-contrast: more) {
+  .cell.is-revealed {
+    border-color: #333;
+  }
+
+  .cell.is-adjacent-1 { color: #0b3f8f; }
+  .cell.is-adjacent-2 { color: #14521a; }
+  .cell.is-adjacent-3 { color: #8f0f0f; }
+  .cell.is-adjacent-8 { color: #2b2b2b; }
+}

@@ -1,0 +1,39 @@
+# 统一换行符策略
+#
+# 背景：Windows 上 Git for Windows 默认 core.autocrlf=true，
+# 会把检出内容改写成 CRLF，导致跨平台协作者看到大量伪改动
+# （diff 中整文件变动、行尾噪声）。
+# 本项目源码统一使用 LF，所以在仓库层面显式钉死，不依赖各人的本地配置。
+
+# 默认：按内容自动判定文本，文本文件在仓库与工作区都使用 LF
+* text=auto eol=lf
+
+# 明确声明为文本、且必须保持 LF 的类型
+*.ts   text eol=lf
+*.mjs  text eol=lf
+*.js   text eol=lf
+*.json text eol=lf
+*.css  text eol=lf
+*.html text eol=lf
+*.md   text eol=lf
+
+# 二进制文件不做任何换行转换
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.webp binary
+*.woff binary
+*.woff2 binary
+*.ttf  binary
+*.zip  binary
+*.7z   binary
+*.exe  binary
+
+# 构建产物与锁文件不参与语言统计（若日后公开到 GitHub 可让 Linguist 忽略）
+dist/**    linguist-generated=true
+coverage/** linguist-generated=true
+
+# 合并 lock 文件时不做逐行冲突（保留双方并另行重装）
+package-lock.json merge=binary

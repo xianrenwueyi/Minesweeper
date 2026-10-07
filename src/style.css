@@ -1,0 +1,236 @@
+/*
+ * 应用外壳样式：变量、HUD、难度条、状态栏与说明文字。
+ * 棋盘与格子的视觉编码见 src/ui/grid.css（FR-03 的唯一样式实现）。
+ */
+
+:root {
+  --bg: #1f2430;
+  --panel: #c0c0c0;
+  --panel-dark: #808080;
+  --panel-light: #ffffff;
+  --cell: #bdbdbd;
+  --cell-open: #d6d6d6;
+  --border-dark: #7b7b7b;
+  --border-light: #f4f4f4;
+  --accent: #ffd166;
+  --danger: #d64545;
+
+  --num-1: #1976d2;
+  --num-2: #2e7d32;
+  --num-3: #c62828;
+  --num-4: #512da8;
+  --num-5: #8d4b00;
+  --num-6: #00796b;
+  --num-7: #212121;
+  --num-8: #616161;
+
+  --cell-size: 30px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 32px 16px;
+  background: radial-gradient(circle at 50% 0%, #2c3446 0%, var(--bg) 70%);
+  color: #e8eaf0;
+  font-family: 'Segoe UI', 'Microsoft YaHei', system-ui, sans-serif;
+  user-select: none;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
+  background: var(--panel);
+  border: 3px solid;
+  border-color: var(--panel-light) var(--panel-dark) var(--panel-dark) var(--panel-light);
+  box-shadow: 0 18px 40px rgb(0 0 0 / 45%);
+}
+
+/* ---------- HUD ---------- */
+
+.hud {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 8px;
+  border: 3px solid;
+  border-color: var(--panel-dark) var(--panel-light) var(--panel-light) var(--panel-dark);
+}
+
+.digits {
+  min-width: 74px;
+  padding: 2px 8px;
+  background: #100f0d;
+  color: #ff3b30;
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-align: center;
+  text-shadow: 0 0 6px rgb(255 59 48 / 65%);
+}
+
+.face {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  font-size: 24px;
+  line-height: 1;
+  background: var(--cell);
+  border: 3px solid;
+  border-color: var(--panel-light) var(--panel-dark) var(--panel-dark) var(--panel-light);
+  cursor: pointer;
+}
+
+.face:active {
+  border-color: var(--panel-dark) var(--panel-light) var(--panel-light) var(--panel-dark);
+}
+
+.face__icon {
+  pointer-events: none;
+}
+
+/* ---------- 难度条 ---------- */
+
+.difficulty {
+  display: flex;
+  gap: 6px;
+}
+
+.difficulty__btn {
+  flex: 1;
+  padding: 7px 10px;
+  color: #1c1c1c;
+  font-family: inherit;
+  font-size: 14px;
+  background: var(--cell);
+  border: 2px solid;
+  border-color: var(--panel-light) var(--panel-dark) var(--panel-dark) var(--panel-light);
+  cursor: pointer;
+}
+
+.difficulty__btn:hover {
+  background: #cdcdcd;
+}
+
+.difficulty__btn.is-active {
+  color: #4a3800;
+  font-weight: 700;
+  background: var(--accent);
+  border-color: #fff0bd #b98f18 #b98f18 #fff0bd;
+}
+
+/* ---------- 状态栏 ---------- */
+
+.status-bar {
+  min-height: 22px;
+  margin: 0;
+  color: #1c1c1c;
+  font-size: 15px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.status-bar.is-won {
+  color: #1b5e20;
+}
+
+.status-bar.is-lost {
+  color: #a01b1b;
+}
+
+/* ---------- 底部说明 ---------- */
+
+.help {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  color: #3a3a3a;
+  font-size: 12px;
+}
+
+.help kbd {
+  padding: 1px 5px;
+  font-family: inherit;
+  font-size: 11px;
+  background: #f0f0f0;
+  border: 1px solid var(--border-dark);
+  border-radius: 3px;
+}
+
+/* ---------- 自定义难度面板（FR-21） ---------- */
+
+.custom-panel {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 10px;
+  background: #cfcfcf;
+  border: 2px solid;
+  border-color: var(--panel-dark) var(--panel-light) var(--panel-light) var(--panel-dark);
+}
+
+/* hidden 属性必须真正生效：特异性高于上面的 .custom-panel */
+.custom-panel[hidden] {
+  display: none;
+}
+
+.custom-panel__field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: #1c1c1c;
+  font-size: 12px;
+}
+
+.custom-panel__field input {
+  width: 72px;
+  padding: 5px 6px;
+  color: #1c1c1c;
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 14px;
+  background: #fff;
+  border: 2px solid;
+  border-color: var(--panel-dark) var(--panel-light) var(--panel-light) var(--panel-dark);
+}
+
+.custom-panel__start {
+  padding: 7px 14px;
+  color: #1c1c1c;
+  font-family: inherit;
+  font-size: 14px;
+  background: var(--accent);
+  border: 2px solid;
+  border-color: #fff0bd #b98f18 #b98f18 #fff0bd;
+  cursor: pointer;
+}
+
+.custom-panel__start:hover {
+  background: #ffdb85;
+}
+
+.custom-panel__error {
+  flex-basis: 100%;
+  min-height: 16px;
+  margin: 0;
+  color: #a01b1b;
+  font-size: 12px;
+  font-weight: 600;
+}

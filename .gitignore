@@ -1,0 +1,24 @@
+# 依赖与构建产物
+node_modules/
+dist/
+coverage/
+.npm-cache/
+
+# 本地环境与私密配置（绝不入库）
+.env
+.env.*
+*.local
+
+# 编辑器与操作系统
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 日志与临时文件
+*.log
+npm-debug.log*
+*.tsbuildinfo
+*.tmp
+*.bak

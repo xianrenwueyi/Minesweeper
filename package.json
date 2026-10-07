@@ -1,0 +1,24 @@
+{
+  "name": "minesweeper",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "网页版扫雷（vanilla TypeScript + Vite），按 SDD 规范开发",
+  "license": "MIT",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:browser": "npm run build && node scripts/run-browser-acceptance.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^3.2.4",
+    "typescript": "^5.9.3",
+    "vite": "^7.1.12",
+    "vitest": "^3.2.4"
+  }
+}
